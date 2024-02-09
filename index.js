@@ -19,6 +19,8 @@ import changepass from "./Account Operations/changepass.js";
 import uploaddp from "./Account Operations/uploaduserdp.js";
 import removedp from "./Account Operations/removedp.js";
 import updateuserinfo from "./Account Operations/updateuserinfo.js";
+import searchUser from "./Account Operations/searchuser.js";
+import getsearchuserinfo from "./Account Operations/getsearchuserinfo.js";
 
 const app = express();
 
@@ -125,43 +127,12 @@ app.post("/updateuserinfo", (req, res) => {
   updateuserinfo(req, res, userDatabase, jwt, JWTSECRET);
 });
 
-app.post("/searchuser", async (req, res) => {
-  let { username, token } = req.body;
-
-  try {
-    let verify = await jwt.verify(token, JWTSECRET);
-
-    let users = await userDatabase.find();
-
-    let finalUsers = [];
-
-    users.forEach((user) => {
-      if (
-        user.username.includes(username) &&
-        user.email !== verify.email &&
-        user.number !== verify.number
-      ) {
-        let userObj = {
-          username: user.username,
-          name: user.name,
-          profilePic: user.profilePic,
-          followers: user.followers.length,
-        };
-        finalUsers.push(userObj);
-      }
-    });
-
-    if (finalUsers.length !== 0) {
-      res.json({
-        status: true,
-        users: finalUsers,
-      });
-    } else {
-      res.json({
-        status: false,
-        response: "No user found",
-      });
-    }
-  } catch (error) {}
+app.post("/searchuser", (req, res) => {
+  searchUser(req, res, jwt, JWTSECRET, userDatabase);
 });
+
+app.post("/getsearchuserinfo", (req, res) => {
+  getsearchuserinfo(req, res, jwt, JWTSECRET, userDatabase);
+});
+
 app.listen(500);
