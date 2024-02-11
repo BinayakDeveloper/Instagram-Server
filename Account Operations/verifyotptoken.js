@@ -6,11 +6,6 @@ async function verifyotptoken(req, res, jwt, bcrypt, JWTSECRET, userDatabase) {
     let otpverify = await bcrypt.compare(enteredOtp, otpValidate.otp);
 
     if (otpverify) {
-      res.json({
-        status: true,
-        response: "OTP Verified",
-      });
-
       let userExistance = await userDatabase.findOne({
         email: otpValidate.userInfo.email,
         number: otpValidate.userInfo.number,
@@ -32,6 +27,11 @@ async function verifyotptoken(req, res, jwt, bcrypt, JWTSECRET, userDatabase) {
           username: otpValidate.userInfo.username,
           password: otpValidate.userInfo.password,
           token: newUserToken,
+        });
+
+        res.json({
+          status: true,
+          response: "OTP Verified",
         });
       } else {
         res.json({
