@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
 
 mongoose
-  .connect("mongodb://0.0.0.0:27017", {
-    dbName: "Instagram",
-  })
+  .connect(
+    "mongodb+srv://WebDeveloper:webdev@maincluster.cq4nipw.mongodb.net/?retryWrites=true&w=majority",
+    {
+      dbName: "Instagram",
+    }
+  )
   .then(() => {
     console.log("Database Connected Successfully");
   });
