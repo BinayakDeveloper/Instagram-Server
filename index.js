@@ -36,7 +36,7 @@ const upload = multer({
 
 // ENV
 env.config({
-  path: "./secret.env",
+  path: "./.env",
 });
 
 const { AUTHPASS, JWTSECRET, APP_PASSWORD } = process.env;
