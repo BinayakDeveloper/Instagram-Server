@@ -11,22 +11,34 @@ async function verifyotptoken(req, res, jwt, bcrypt, JWTSECRET, userDatabase) {
         response: "OTP Verified",
       });
 
-      let newUserToken = await jwt.sign(
-        {
-          email: otpValidate.userInfo.email,
-          number: otpValidate.userInfo.number,
-        },
-        JWTSECRET
-      );
-
-      await userDatabase.create({
-        number: otpValidate.userInfo.number,
+      let userExistance = await userDatabase.findOne({
         email: otpValidate.userInfo.email,
-        name: otpValidate.userInfo.name,
-        username: otpValidate.userInfo.username,
-        password: otpValidate.userInfo.password,
-        token: newUserToken,
+        number: otpValidate.userInfo.number,
       });
+
+      if (userExistance === null) {
+        let newUserToken = await jwt.sign(
+          {
+            email: otpValidate.userInfo.email,
+            number: otpValidate.userInfo.number,
+          },
+          JWTSECRET
+        );
+
+        await userDatabase.create({
+          number: otpValidate.userInfo.number,
+          email: otpValidate.userInfo.email,
+          name: otpValidate.userInfo.name,
+          username: otpValidate.userInfo.username,
+          password: otpValidate.userInfo.password,
+          token: newUserToken,
+        });
+      } else {
+        res.json({
+          status: false,
+          response: "Already Registered",
+        });
+      }
     } else {
       res.json({
         status: false,
