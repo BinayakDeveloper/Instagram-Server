@@ -90,7 +90,7 @@ app.post("/verifyusertoken", (req, res) => {
 });
 
 app.post("/genotptoken", (req, res) => {
-  genotptoken(req, res, APP_PASSWORD, bcrypt, jwt, JWTSECRET);
+  genotptoken(req, res, jwt, JWTSECRET);
 });
 
 app.post("/verifyotptoken", (req, res) => {

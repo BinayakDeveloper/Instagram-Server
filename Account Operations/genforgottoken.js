@@ -26,7 +26,7 @@ async function genforgottoken(req, res, userDatabase, jwt, JWTSECRET) {
 
     let mailBody = `Hi ${
       user.name.split(" ")[0]
-    } your password reset link is <a href="http://localhost:3000/changepass/${forgotToken}/${
+    } your password reset link is <a href="https://instaflix.vercel.app/changepass/${forgotToken}/${
       user.token
     }">Click Here</a>. It Is Valid For 5 Minutes`;
 

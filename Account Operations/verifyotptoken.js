@@ -1,10 +1,11 @@
-async function verifyotptoken(req, res, jwt, JWTSECRET, userDatabase) {
+async function verifyotptoken(req, res, jwt, bcrypt, JWTSECRET, userDatabase) {
   let { enteredOtp, otpToken } = req.body;
 
   try {
     let otpValidate = await jwt.verify(otpToken, JWTSECRET);
+    let otpverify = await bcrypt.compare(enteredOtp, otpValidate.otp);
 
-    if (enteredOtp == otpValidate.otp) {
+    if (otpverify) {
       res.json({
         status: true,
         response: "OTP Verified",

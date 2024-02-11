@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import env from "dotenv";
 
 env.config({
-  path: "./secret.env",
+  path: "./.env",
 });
 
 const { APP_PASSWORD } = process.env;
