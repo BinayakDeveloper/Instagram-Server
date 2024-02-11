@@ -21,6 +21,7 @@ import removedp from "./Account Operations/removedp.js";
 import updateuserinfo from "./Account Operations/updateuserinfo.js";
 import searchUser from "./Account Operations/searchuser.js";
 import getsearchuserinfo from "./Account Operations/getsearchuserinfo.js";
+import genuserqr from "./Account Operations/genuserqr.js";
 
 const app = express();
 
@@ -72,7 +73,7 @@ app.use(
   })
 );
 
-// app.use(auth);
+app.use(auth);
 
 // Login API
 app.post("/login", async (req, res) => {
@@ -133,6 +134,10 @@ app.post("/searchuser", (req, res) => {
 
 app.post("/getsearchuserinfo", (req, res) => {
   getsearchuserinfo(req, res, jwt, JWTSECRET, userDatabase);
+});
+
+app.post("/generateuserqr", (req, res) => {
+  genuserqr(req, res, jwt, JWTSECRET, userDatabase);
 });
 
 app.listen(500);

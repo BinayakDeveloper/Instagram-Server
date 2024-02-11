@@ -21,8 +21,8 @@ async function getsearchuserinfo(req, res, jwt, JWTSECRET, userDatabase) {
           });
         } else {
           res.json({
-            status: false,
-            response: "Invalid username",
+            status: true,
+            response: "Redirect to profile",
           });
         }
       } else {
