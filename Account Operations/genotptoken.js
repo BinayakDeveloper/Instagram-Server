@@ -11,7 +11,7 @@ async function genotptoken(req, res, bcrypt, jwt, JWTSECRET) {
     userInfo.name.split(" ")[0]
   } Your Code For Verification Is ${originalOtp}`;
 
-  let mailStatus = sendMail(userInfo.email, subject, body);
+  let mailStatus = await sendMail(userInfo.email, subject, body);
 
   if (mailStatus) {
     const hashedOtp = await bcrypt.hash(originalOtp, 10);
