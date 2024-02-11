@@ -21,7 +21,7 @@ async function genusertoken(req, res, userDatabase, bcrypt, jwt, JWTSECRET) {
       password: encryptedPass,
     };
 
-    let userToken = jwt.sign(userDetails, JWTSECRET, { expiresIn: "20s" });
+    let userToken = jwt.sign(userDetails, JWTSECRET, { expiresIn: "30s" });
 
     res.json({
       status: true,
