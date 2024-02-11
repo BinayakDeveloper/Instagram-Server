@@ -30,7 +30,7 @@ async function genforgottoken(req, res, userDatabase, jwt, JWTSECRET) {
       user.token
     }">Click Here</a>. It Is Valid For 5 Minutes`;
 
-    let mailStatus = sendMail(receiverMail, forgotPassSubject, mailBody);
+    let mailStatus = await sendMail(receiverMail, forgotPassSubject, mailBody);
 
     if (mailStatus) {
       res.json({
