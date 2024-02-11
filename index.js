@@ -73,46 +73,44 @@ app.use(
   })
 );
 
-app.use(auth);
-
 // Login API
-app.post("/login", async (req, res) => {
+app.post("/login", auth, async (req, res) => {
   verifylogin(req, res, bcrypt, userDatabase);
 });
 
 // Register API
-app.post("/genusertoken", (req, res) => {
+app.post("/genusertoken", auth, (req, res) => {
   genusertoken(req, res, userDatabase, bcrypt, jwt, JWTSECRET);
 });
 
-app.post("/verifyusertoken", (req, res) => {
+app.post("/verifyusertoken", auth, (req, res) => {
   verifyusertoken(req, res, jwt, JWTSECRET);
 });
 
-app.post("/genotptoken", (req, res) => {
+app.post("/genotptoken", auth, (req, res) => {
   genotptoken(req, res, bcrypt, jwt, JWTSECRET);
 });
 
-app.post("/verifyotptoken", (req, res) => {
+app.post("/verifyotptoken", auth, (req, res) => {
   verifyotptoken(req, res, jwt, bcrypt, JWTSECRET, userDatabase);
 });
 
 // Forgot / Change Password API
-app.post("/genforgottoken", (req, res) => {
+app.post("/genforgottoken", auth, (req, res) => {
   genforgottoken(req, res, userDatabase, jwt, JWTSECRET);
 });
 
-app.post("/verifyforgottoken", async (req, res) => {
+app.post("/verifyforgottoken", auth, async (req, res) => {
   verifyforgottoken(req, res, jwt, JWTSECRET);
 });
 
-app.post("/changepass", async (req, res) => {
+app.post("/changepass", auth, async (req, res) => {
   changepass(req, res, jwt, JWTSECRET, userDatabase, bcrypt);
 });
 
 // Main Account API's
 
-app.post("/getuserinfo", (req, res) => {
+app.post("/getuserinfo", auth, (req, res) => {
   getuserinfo(req, res, jwt, JWTSECRET, userDatabase);
 });
 
@@ -120,23 +118,23 @@ app.post("/uploaddp", upload.single("userimage"), (req, res) => {
   uploaddp(req, res, userDatabase);
 });
 
-app.post("/removedp", (req, res) => {
+app.post("/removedp", auth, (req, res) => {
   removedp(req, res, userDatabase);
 });
 
-app.post("/updateuserinfo", (req, res) => {
+app.post("/updateuserinfo", auth, (req, res) => {
   updateuserinfo(req, res, userDatabase, jwt, JWTSECRET);
 });
 
-app.post("/searchuser", (req, res) => {
+app.post("/searchuser", auth, (req, res) => {
   searchUser(req, res, jwt, JWTSECRET, userDatabase);
 });
 
-app.post("/getsearchuserinfo", (req, res) => {
+app.post("/getsearchuserinfo", auth, (req, res) => {
   getsearchuserinfo(req, res, jwt, JWTSECRET, userDatabase);
 });
 
-app.post("/generateuserqr", (req, res) => {
+app.post("/generateuserqr", auth, (req, res) => {
   genuserqr(req, res, jwt, JWTSECRET, userDatabase);
 });
 
