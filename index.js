@@ -94,7 +94,7 @@ app.post("/genotptoken", (req, res) => {
 });
 
 app.post("/verifyotptoken", (req, res) => {
-  verifyotptoken(req, res, jwt, bcrypt, JWTSECRET, userDatabase);
+  verifyotptoken(req, res, jwt, JWTSECRET, userDatabase);
 });
 
 // Forgot / Change Password API

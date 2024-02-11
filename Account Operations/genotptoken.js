@@ -14,9 +14,7 @@ async function genotptoken(req, res, APP_PASSWORD, bcrypt, jwt, JWTSECRET) {
   let mailStatus = sendMail(userInfo.email, subject, body);
 
   if (mailStatus) {
-    const hashedOtp = await bcrypt.hash(originalOtp, 10);
-
-    let otpToken = jwt.sign({ otp: hashedOtp, userInfo }, JWTSECRET, {
+    let otpToken = jwt.sign({ otp: originalOtp, userInfo }, JWTSECRET, {
       expiresIn: "5m",
     });
 
