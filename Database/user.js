@@ -44,6 +44,12 @@ let userSchema = new mongoose.Schema({
   following: {
     type: Array,
   },
+  followRequests: {
+    type: Array,
+  },
+  notifications: {
+    type: Array,
+  },
   bio: {
     type: String,
     default: "",

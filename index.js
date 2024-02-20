@@ -138,4 +138,29 @@ app.post("/generateuserqr", auth, (req, res) => {
   genuserqr(req, res, jwt, JWTSECRET, userDatabase);
 });
 
+// Follow / Unfollow Api's
+
+app.post("/followuser", auth, async (req, res) => {
+  let { usertoken, friendtoken } = req.body;
+
+  let user = await userDatabase.findOne({ token: usertoken });
+  let friend = await userDatabase.findOne({ token: friendtoken });
+  if (user !== null && friend !== null) {
+    let privateUser = friend.privateStatus;
+    if (!privateUser) {
+      await user.updateOne({ $push: { following: friendtoken } });
+      await friend.updateOne({ $push: { followers: usertoken } });
+      res.json({
+        status: true,
+        response: "Followed successfully",
+      });
+    } else {
+      res.json({
+        status: false,
+        response: "Friend Profile Is Private",
+      });
+    }
+  }
+});
+
 app.listen(500);
