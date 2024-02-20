@@ -155,11 +155,53 @@ app.post("/followuser", auth, async (req, res) => {
         response: "Followed successfully",
       });
     } else {
+      await friend.updateOne({ $push: { followRequests: usertoken } });
       res.json({
-        status: false,
-        response: "Friend Profile Is Private",
+        status: true,
+        response: "Request sent",
       });
     }
+  } else {
+    res.json({
+      status: false,
+      response: "User not found",
+    });
+  }
+});
+
+app.post("/removefollowrequest", auth, async (req, res) => {
+  let { usertoken, friendtoken } = req.body;
+
+  let user = await userDatabase.findOne({ token: usertoken });
+  let friend = await userDatabase.findOne({ token: friendtoken });
+
+  if (user !== null && friend !== null) {
+    await friend.updateOne({ $pull: { followRequests: usertoken } });
+    res.json({
+      status: true,
+      response: "Request removed",
+    });
+  }
+});
+
+app.post("/unfollowuser", auth, async (req, res) => {
+  let { usertoken, friendtoken } = req.body;
+
+  let user = await userDatabase.findOne({ token: usertoken });
+  let friend = await userDatabase.findOne({ token: friendtoken });
+
+  if (user !== null && friend !== null) {
+    await user.updateOne({ $pull: { following: friendtoken } });
+    await friend.updateOne({ $pull: { followers: usertoken } });
+    res.json({
+      status: true,
+      response: "Unfollowed successfully",
+    });
+  } else {
+    res.json({
+      status: false,
+      response: "User not found",
+    });
   }
 });
 
