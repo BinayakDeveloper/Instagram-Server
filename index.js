@@ -145,17 +145,48 @@ app.post("/followuser", auth, async (req, res) => {
 
   let user = await userDatabase.findOne({ token: usertoken });
   let friend = await userDatabase.findOne({ token: friendtoken });
+
   if (user !== null && friend !== null) {
     let privateUser = friend.privateStatus;
+
     if (!privateUser) {
-      await user.updateOne({ $push: { following: friendtoken } });
-      await friend.updateOne({ $push: { followers: usertoken } });
+      await user.updateOne({
+        $push: {
+          following: {
+            profilePic: friend.profilePic,
+            name: friend.name,
+            username: friend.username,
+            token: friend.token,
+          },
+        },
+      });
+
+      await friend.updateOne({
+        $push: {
+          followers: {
+            profilePic: user.profilePic,
+            name: user.name,
+            username: user.username,
+            token: user.token,
+          },
+        },
+      });
+
       res.json({
         status: true,
         response: "Followed successfully",
       });
     } else {
-      await friend.updateOne({ $push: { followRequests: usertoken } });
+      await friend.updateOne({
+        $push: {
+          followRequests: {
+            profilePic: user.profilePic,
+            name: user.name,
+            username: user.username,
+            token: user.token,
+          },
+        },
+      });
       res.json({
         status: true,
         response: "Request sent",
@@ -176,7 +207,16 @@ app.post("/removefollowrequest", auth, async (req, res) => {
   let friend = await userDatabase.findOne({ token: friendtoken });
 
   if (user !== null && friend !== null) {
-    await friend.updateOne({ $pull: { followRequests: usertoken } });
+    await friend.updateOne({
+      $pull: {
+        followRequests: {
+          profilePic: user.profilePic,
+          name: user.name,
+          username: user.username,
+          token: user.token,
+        },
+      },
+    });
     res.json({
       status: true,
       response: "Request removed",
@@ -191,8 +231,26 @@ app.post("/unfollowuser", auth, async (req, res) => {
   let friend = await userDatabase.findOne({ token: friendtoken });
 
   if (user !== null && friend !== null) {
-    await user.updateOne({ $pull: { following: friendtoken } });
-    await friend.updateOne({ $pull: { followers: usertoken } });
+    await user.updateOne({
+      $pull: {
+        following: {
+          profilePic: friend.profilePic,
+          name: friend.name,
+          username: friend.username,
+          token: friend.token,
+        },
+      },
+    });
+    await friend.updateOne({
+      $pull: {
+        followers: {
+          profilePic: user.profilePic,
+          name: user.name,
+          username: user.username,
+          token: user.token,
+        },
+      },
+    });
     res.json({
       status: true,
       response: "Unfollowed successfully",
@@ -201,6 +259,32 @@ app.post("/unfollowuser", auth, async (req, res) => {
     res.json({
       status: false,
       response: "User not found",
+    });
+  }
+});
+
+app.post("/getnotifications", auth, async (req, res) => {
+  let { usertoken } = req.body;
+
+  let user = await userDatabase.findOne({ token: usertoken });
+
+  if (user !== null) {
+    let followRequests = user.followRequests;
+    let notifications = user.notifications;
+
+    let finalNotifications = {
+      followRequests,
+      notifications,
+    };
+
+    res.json({
+      status: true,
+      response: finalNotifications,
+    });
+  } else {
+    res.json({
+      status: false,
+      response: "Invalid token",
     });
   }
 });
