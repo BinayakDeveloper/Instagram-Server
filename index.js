@@ -22,6 +22,13 @@ import updateuserinfo from "./Account Operations/updateuserinfo.js";
 import searchUser from "./Account Operations/searchuser.js";
 import getsearchuserinfo from "./Account Operations/getsearchuserinfo.js";
 import genuserqr from "./Account Operations/genuserqr.js";
+import followuser from "./Account Operations/followuser.js";
+import removefollowrequest from "./Account Operations/removefollowrequest.js";
+import unfollowuser from "./Account Operations/unfollowuser.js";
+import declinerequest from "./Account Operations/declinerequest.js";
+import acceptrequest from "./Account Operations/acceptrequest.js";
+import getnotifications from "./Account Operations/getnotifications.js";
+import getbulkuserdata from "./Account Operations/getbulkuserdata.js";
 
 const app = express();
 
@@ -140,97 +147,32 @@ app.post("/generateuserqr", auth, (req, res) => {
 
 // Follow / Unfollow Api's
 
-app.post("/followuser", auth, async (req, res) => {
-  let { usertoken, friendtoken } = req.body;
-
-  let user = await userDatabase.findOne({ token: usertoken });
-  let friend = await userDatabase.findOne({ token: friendtoken });
-
-  if (user !== null && friend !== null) {
-    let privateUser = friend.privateStatus;
-
-    if (!privateUser) {
-      await user.updateOne({ $push: { following: friendtoken } });
-      await friend.updateOne({ $push: { followers: usertoken } });
-      res.json({
-        status: true,
-        response: "Followed successfully",
-      });
-    } else {
-      await friend.updateOne({ $push: { followRequests: usertoken } });
-      res.json({
-        status: true,
-        response: "Request sent",
-      });
-    }
-  } else {
-    res.json({
-      status: false,
-      response: "User not found",
-    });
-  }
+app.post("/followuser", auth, (req, res) => {
+  followuser(req, res, userDatabase);
 });
 
-app.post("/removefollowrequest", auth, async (req, res) => {
-  let { usertoken, friendtoken } = req.body;
-
-  let user = await userDatabase.findOne({ token: usertoken });
-  let friend = await userDatabase.findOne({ token: friendtoken });
-
-  if (user !== null && friend !== null) {
-    await friend.updateOne({ $pull: { followRequests: usertoken } });
-    res.json({
-      status: true,
-      response: "Request removed",
-    });
-  }
+app.post("/removefollowrequest", auth, (req, res) => {
+  removefollowrequest(req, res, userDatabase);
 });
 
-app.post("/unfollowuser", auth, async (req, res) => {
-  let { usertoken, friendtoken } = req.body;
-
-  let user = await userDatabase.findOne({ token: usertoken });
-  let friend = await userDatabase.findOne({ token: friendtoken });
-
-  if (user !== null && friend !== null) {
-    await user.updateOne({ $pull: { following: friendtoken } });
-    await friend.updateOne({ $pull: { followers: usertoken } });
-    res.json({
-      status: true,
-      response: "Unfollowed successfully",
-    });
-  } else {
-    res.json({
-      status: false,
-      response: "User not found",
-    });
-  }
+app.post("/unfollowuser", auth, (req, res) => {
+  unfollowuser(req, res, userDatabase);
 });
 
-app.post("/getnotifications", auth, async (req, res) => {
-  let { usertoken } = req.body;
+app.post("/declinerequest", auth, (req, res) => {
+  declinerequest(req, res, userDatabase);
+});
 
-  let user = await userDatabase.findOne({ token: usertoken });
+app.post("/acceptrequest", auth, (req, res) => {
+  acceptrequest(req, res, userDatabase);
+});
 
-  if (user !== null) {
-    let followRequests = user.followRequests;
-    let notifications = user.notifications;
+app.post("/getnotifications", auth, (req, res) => {
+  getnotifications(req, res, userDatabase);
+});
 
-    let finalNotifications = {
-      followRequests,
-      notifications,
-    };
-
-    res.json({
-      status: true,
-      response: finalNotifications,
-    });
-  } else {
-    res.json({
-      status: false,
-      response: "Invalid token",
-    });
-  }
+app.post("/getbulkuserdata", auth, (req, res) => {
+  getbulkuserdata(req, res, userDatabase);
 });
 
 app.listen(500);
