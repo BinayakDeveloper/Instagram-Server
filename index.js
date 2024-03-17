@@ -5,6 +5,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import multer from "multer";
 
+// Cloudinary Config
+import cloudinary from "./Cloudinary/config.js";
+
 // Userdefined Modules
 import userDatabase from "./Database/user.js";
 import genusertoken from "./Account Operations/genusertoken.js";
@@ -29,6 +32,7 @@ import declinerequest from "./Account Operations/declinerequest.js";
 import acceptrequest from "./Account Operations/acceptrequest.js";
 import getnotifications from "./Account Operations/getnotifications.js";
 import getbulkuserdata from "./Account Operations/getbulkuserdata.js";
+import uploadpost from "./Account Operations/uploadpost.js";
 
 const app = express();
 
@@ -143,6 +147,10 @@ app.post("/getsearchuserinfo", auth, (req, res) => {
 
 app.post("/generateuserqr", auth, (req, res) => {
   genuserqr(req, res, jwt, JWTSECRET, userDatabase);
+});
+
+app.post("/uploadpost", upload.single("userpost"), async (req, res) => {
+  uploadpost(req, res, userDatabase);
 });
 
 // Follow / Unfollow Api's
