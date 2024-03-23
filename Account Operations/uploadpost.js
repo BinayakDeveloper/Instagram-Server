@@ -1,6 +1,6 @@
 import cloudinary from "../Cloudinary/config.js";
 
-async function uploadpost(req, res, userDatabase) {
+async function uploadpost(req, res, userDatabase, jwt, JWTSECRET) {
   const { file } = req;
   const { caption, location, userId } = req.body;
 
@@ -21,6 +21,9 @@ async function uploadpost(req, res, userDatabase) {
       userId,
       likes: [],
     };
+
+    let postToken = await jwt.sign(finalData, JWTSECRET);
+    finalData.postToken = postToken;
 
     let dataUpdate = await user.updateOne({ $push: { posts: finalData } });
 

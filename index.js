@@ -150,7 +150,7 @@ app.post("/generateuserqr", auth, (req, res) => {
 });
 
 app.post("/uploadpost", upload.single("userpost"), async (req, res) => {
-  uploadpost(req, res, userDatabase);
+  uploadpost(req, res, userDatabase, jwt, JWTSECRET);
 });
 
 // Follow / Unfollow Api's
