@@ -11,7 +11,7 @@ async function genuserqr(req, res, jwt, JWTSECRET, userDatabase) {
     });
 
     if (user !== null) {
-      let profileLink = `https://instaflix.vercel.app/dashboard/search/${user.username}`;
+      let profileLink = `https://instame.vercel.app/dashboard/search/${user.username}`;
 
       let qrLink = await QRCode.toDataURL(profileLink);
 
