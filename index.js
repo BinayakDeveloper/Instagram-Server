@@ -1,4 +1,4 @@
-import express, { urlencoded } from "express";
+import express, { json, urlencoded } from "express";
 import cors from "cors";
 import env from "dotenv";
 import bcrypt from "bcrypt";
@@ -33,6 +33,8 @@ import acceptrequest from "./Account Operations/acceptrequest.js";
 import getnotifications from "./Account Operations/getnotifications.js";
 import getbulkuserdata from "./Account Operations/getbulkuserdata.js";
 import uploadpost from "./Account Operations/uploadpost.js";
+import likepost from "./Account Operations/likepost.js";
+import dislikepost from "./Account Operations/dislikepost.js";
 
 const app = express();
 
@@ -151,6 +153,14 @@ app.post("/generateuserqr", auth, (req, res) => {
 
 app.post("/uploadpost", upload.single("userpost"), async (req, res) => {
   uploadpost(req, res, userDatabase, jwt, JWTSECRET);
+});
+
+app.post("/likepost", auth, async (req, res) => {
+  likepost(req, res, jwt, JWTSECRET, userDatabase);
+});
+
+app.post("/dislikepost", auth, async (req, res) => {
+  dislikepost(req, res, jwt, JWTSECRET, userDatabase);
 });
 
 // Follow / Unfollow Api's
