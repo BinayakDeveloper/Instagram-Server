@@ -35,6 +35,7 @@ import getbulkuserdata from "./Account Operations/getbulkuserdata.js";
 import uploadpost from "./Account Operations/uploadpost.js";
 import likepost from "./Account Operations/likepost.js";
 import dislikepost from "./Account Operations/dislikepost.js";
+import getpostinfo from "./Account Operations/getpostinfo.js";
 
 const app = express();
 
@@ -153,6 +154,10 @@ app.post("/generateuserqr", auth, (req, res) => {
 
 app.post("/uploadpost", upload.single("userpost"), async (req, res) => {
   uploadpost(req, res, userDatabase, jwt, JWTSECRET);
+});
+
+app.post("/getpostinfo", auth, async (req, res) => {
+  getpostinfo(req, res, userDatabase);
 });
 
 app.post("/likepost", auth, async (req, res) => {
