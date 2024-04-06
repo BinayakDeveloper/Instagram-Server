@@ -3,7 +3,7 @@ async function dislikePost(req, res, jwt, JWTSECRET, userDatabase) {
 
   try {
     let postVerify = await jwt.verify(postToken, JWTSECRET);
-    let user = await userDatabase.findById(postVerify.userId);
+    let user = await userDatabase.findOne({ token: postVerify.userToken });
     let allPosts = user.posts;
 
     allPosts.forEach((post) => {
