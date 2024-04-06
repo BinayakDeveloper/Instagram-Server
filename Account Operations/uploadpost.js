@@ -2,10 +2,10 @@ import cloudinary from "../Cloudinary/config.js";
 
 async function uploadpost(req, res, userDatabase, jwt, JWTSECRET) {
   const { file } = req;
-  const { caption, location, userId } = req.body;
+  const { caption, location, userToken } = req.body;
 
   try {
-    let user = await userDatabase.findById(userId);
+    let user = await userDatabase.findOne({ token: userToken });
     let postUpload = await cloudinary.uploader.upload(file.path, {
       folder: "Instagram Posts",
     });
@@ -18,7 +18,7 @@ async function uploadpost(req, res, userDatabase, jwt, JWTSECRET) {
       createdAt: created_at,
       caption,
       location,
-      userId,
+      userToken,
       likes: [],
     };
 
