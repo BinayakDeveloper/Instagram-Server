@@ -11,36 +11,34 @@ async function acceptrequest(req, res, userDatabase) {
     let userUpdate2 = await user.updateOne({
       $push: { followers: friendtoken },
     });
+    let userNotificationUpdate = await user.updateOne({
+      $push: {
+        notifications: {
+          type: "follow",
+          friendToken: friend.token,
+          createdAt: Date.now(),
+        },
+      },
+    });
     let friendUpdate1 = await friend.updateOne({
       $push: { following: usertoken },
     });
+
     if (
       userUpdate1.acknowledged &&
       userUpdate2.acknowledged &&
+      userNotificationUpdate.acknowledged &&
       friendUpdate1.acknowledged
     ) {
-      res.json({ status: true, response: "Accepted" });
-      let notificationUpdate = await user.updateOne({
-        $push: {
-          notification: {
-            type: "follow",
-            friendToken: friend.token,
-            createdAt: new Date.now(),
-          },
-        },
+      res.json({
+        status: true,
+        response: "Followed Successfully & Notification updated",
       });
-
-      if (notificationUpdate.acknowledged) {
-        res.json({
-          status: true,
-          response: "Notification updated",
-        });
-      } else {
-        res.json({
-          status: false,
-          response: "Error while updating notification",
-        });
-      }
+    } else {
+      res.json({
+        status: false,
+        response: "Unknown error occured",
+      });
     }
   } else {
     res.json({

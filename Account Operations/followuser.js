@@ -14,34 +14,25 @@ async function followuser(req, res, userDatabase) {
       let friendUpdate = await friend.updateOne({
         $push: { followers: usertoken },
       });
+      let friendNotificationUpdate = await friend.updateOne({
+        $push: {
+          notifications: {
+            type: "follow",
+            friendToken: friend.token,
+            createdAt: Date.now(),
+          },
+        },
+      });
 
-      if (userUpdate.acknowledged && friendUpdate.acknowledged) {
+      if (
+        userUpdate.acknowledged &&
+        friendUpdate.acknowledged &&
+        friendNotificationUpdate.acknowledged
+      ) {
         res.json({
           status: true,
-          response: "Followed successfully",
+          response: "Followed Successfully & Notification updated",
         });
-
-        let notificationUpdate = await friend.updateOne({
-          $push: {
-            notification: {
-              type: "follow",
-              friendToken: friend.token,
-              createdAt: new Date.now(),
-            },
-          },
-        });
-
-        if (notificationUpdate.acknowledged) {
-          res.json({
-            status: true,
-            response: "Notification updated",
-          });
-        } else {
-          res.json({
-            status: false,
-            response: "Error while updating notification",
-          });
-        }
       } else {
         res.json({
           status: false,

@@ -170,7 +170,7 @@ app.post("/dislikepost", auth, async (req, res) => {
 
 // Follow / Unfollow Api's
 
-app.post("/followuser", auth, (req, res) => {
+app.post("/followuser", auth, async (req, res) => {
   followuser(req, res, userDatabase);
 });
 
