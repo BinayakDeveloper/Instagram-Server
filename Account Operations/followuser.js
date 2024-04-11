@@ -14,11 +14,12 @@ async function followuser(req, res, userDatabase) {
       let friendUpdate = await friend.updateOne({
         $push: { followers: usertoken },
       });
+
       let friendNotificationUpdate = await friend.updateOne({
         $push: {
           notifications: {
             type: "follow",
-            friendToken: friend.token,
+            friendToken: user.token,
             createdAt: Date.now(),
           },
         },

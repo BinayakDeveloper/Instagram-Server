@@ -178,7 +178,7 @@ app.post("/removefollowrequest", auth, (req, res) => {
   removefollowrequest(req, res, userDatabase);
 });
 
-app.post("/unfollowuser", auth, (req, res) => {
+app.post("/unfollowuser", auth, async (req, res) => {
   unfollowuser(req, res, userDatabase);
 });
 

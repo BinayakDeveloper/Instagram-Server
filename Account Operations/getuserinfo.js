@@ -7,10 +7,17 @@ async function getuserinfo(req, res, jwt, JWTSECRET, userDatabase) {
       email: userverify.email,
       number: userverify.number,
     });
-    res.json({
-      status: true,
-      userInfo: user,
-    });
+    if (user !== null) {
+      res.json({
+        status: true,
+        userInfo: user,
+      });
+    } else {
+      res.json({
+        status: false,
+        response: "Invalid User",
+      });
+    }
   } catch (err) {
     res.json({
       status: false,

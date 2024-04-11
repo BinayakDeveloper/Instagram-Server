@@ -5,14 +5,21 @@ async function removefollowrequest(req, res, userDatabase) {
   let friend = await userDatabase.findOne({ token: friendtoken });
 
   if (user !== null && friend !== null) {
-    await friend.updateOne({
+    let removeRequest = await friend.updateOne({
       $pull: { followRequests: usertoken },
     });
 
-    res.json({
-      status: true,
-      response: "Request removed",
-    });
+    if (removeRequest.acknowledged) {
+      res.json({
+        status: true,
+        response: "Request removed",
+      });
+    } else {
+      res.json({
+        status: false,
+        response: "Unknown error occured",
+      });
+    }
   }
 }
 

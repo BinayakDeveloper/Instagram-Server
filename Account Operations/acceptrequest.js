@@ -15,7 +15,7 @@ async function acceptrequest(req, res, userDatabase) {
       $push: {
         notifications: {
           type: "follow",
-          friendToken: friend.token,
+          friendToken: user.token,
           createdAt: Date.now(),
         },
       },
