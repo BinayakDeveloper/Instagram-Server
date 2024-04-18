@@ -6,7 +6,9 @@ async function getpostinfo(req, res, userDatabase) {
     if (postUser !== null) {
       let privateStatus = postUser.privateStatus;
       if (privateStatus) {
-        let followingStatus = postUser.followers.includes(userToken);
+        let followingStatus =
+          postUser.followers.includes(userToken) ||
+          postUser.token === userToken;
         if (followingStatus === true) {
           const post = postUser.posts.find((curPost) => {
             if (curPost.postToken === postToken) return curPost;
