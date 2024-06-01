@@ -7,6 +7,8 @@ async function followuser(req, res, userDatabase) {
   if (user !== null && friend !== null) {
     let privateUser = friend.privateStatus;
 
+    // Add Notifications In Public Accounts
+
     if (!privateUser) {
       let userUpdate = await user.updateOne({
         $push: { following: friendtoken },

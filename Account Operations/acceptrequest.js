@@ -11,15 +11,17 @@ async function acceptrequest(req, res, userDatabase) {
     let userUpdate2 = await user.updateOne({
       $push: { followers: friendtoken },
     });
+
     let userNotificationUpdate = await user.updateOne({
       $push: {
         notifications: {
           type: "follow",
-          friendToken: user.token,
+          friendToken: friend.token,
           createdAt: Date.now(),
         },
       },
     });
+
     let friendUpdate1 = await friend.updateOne({
       $push: { following: usertoken },
     });
